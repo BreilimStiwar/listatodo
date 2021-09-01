@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:listtodo/src/models/actividad_model.dart';
 import 'package:listtodo/src/models/cat_model.dart';
 
 class CatsProvider{

@@ -27,6 +27,10 @@ class _CatsState extends State<Cats> {
       appBar: AppBar(title: Text('Comprobar')),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text('Se agragaran las siguientes actividades a la lista de actividades', style: TextStyle(fontSize:16, fontWeight: FontWeight.w500)),
+          ),
           Expanded(child: _listCats()),
           _saved(),
         ],
@@ -70,12 +74,9 @@ class _CatsState extends State<Cats> {
         elevation:2.0,
         child: Column(
         children: <Widget>[
-            Text('${cat.fact}', style: TextStyle(fontSize: 16,color: Colors.blue)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text('${cat.length}'),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('${cat.fact}', style: TextStyle(fontSize: 16,color: Colors.blue)),
             ),
           ],
         ),
@@ -85,7 +86,7 @@ class _CatsState extends State<Cats> {
 
   Widget _saved(){
     return ElevatedButton.icon(
-      label: Text('Guardar'),
+      label: Text('Aceptar'),
       icon: Icon(Icons.save),
       onPressed:  _submit, 
     );
@@ -99,6 +100,9 @@ class _CatsState extends State<Cats> {
       actividadModel.status=false;
       actividadProvider.crearActividad(actividadModel);
     }).toList();
+
+    Navigator.pushNamed(context, 'inicio');
+
     //print(datos);
     //actividadProvider.crearActividad(actividadModel);
   }

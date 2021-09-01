@@ -117,7 +117,7 @@ class _AgregarActividadState extends State<AgregarActividad> {
     }
 
     setState(() =>  _guardando=false);
-    Navigator.pop(context);
+    Navigator.pushNamed(context, 'inicio'); 
     
   }
 

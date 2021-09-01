@@ -1,35 +1,49 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
-import 'package:http/http.dart' as http;
 import 'package:listtodo/src/models/actividad_model.dart';
 import 'package:listtodo/src/pages/cats_page.dart';
 import 'package:listtodo/src/providers/actividadesProvider.dart';
 import 'package:listtodo/src/providers/gatosProvider.dart';
+import 'package:listtodo/src/search/search_delegate.dart';
 
 
 
-class ListToDo extends StatelessWidget {
+class ListToDo extends StatefulWidget {
   
   ListToDo({ Key? key }) : super(key: key); 
 
+  @override
+  _ListToDoState createState() => _ListToDoState();
+}
+
+class _ListToDoState extends State<ListToDo> {
   final actividadesProvider = new ActividadesProvider();
+
   final gatosProvider = new CatsProvider();
+
   final numdata = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(title: Center(child: Text('Actividades pendientes'))),
+      appBar: AppBar(
+        title: Center(child: Text('Actividades pendientes')),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context, 
+                delegate: ActividadesSearch(), 
+                //query: 'Busca tus actividades'
+              );
+            },
+          )
+        ],
+      ),
       body: _crearListado(),
-      // floatingActionButton: FloatingActionButton(
-      //   tooltip: 'Añadir',
-      //   child: Icon(Icons.add),
-      //   onPressed: () => agregarActividad(context),
-      // ),
-
+    
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(2.0),
         child: Column(
@@ -48,25 +62,6 @@ class ListToDo extends StatelessWidget {
           ]
         ),
       ),
-
-
-      // floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
-      // floatingActionButton: Padding(
-      //   padding: const EdgeInsets.all(2.0),
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //     children: <Widget>[
-      //       FloatingActionButton(
-      //         onPressed: () {},
-      //         child: Icon(Icons.navigate_before),
-      //       ),
-      //       FloatingActionButton(
-      //         onPressed: () {},
-      //         child: Icon(Icons.navigate_next),
-      //       )
-      //     ]
-      //   )
-      // ),
     );
   }
 
@@ -137,42 +132,29 @@ class ListToDo extends StatelessWidget {
         elevation:2.0,
         child: Column(
           children: <Widget>[
-            Text('${actividad.title}', style: TextStyle(fontSize: 16,color: Colors.blue)),
+            Padding(
+              padding: const EdgeInsets.only(top:8.0, bottom:8.0),
+              child: Text('${actividad.title}', style: TextStyle(fontSize: 16,color: Colors.blue)),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Expanded(child: Text('${actividad.description}')),
-                IconButton(onPressed: (){}, icon: Icon(Icons.edit, color: Colors.green)),
-                IconButton(onPressed: (){}, icon: Icon(Icons.delete,  color: Colors.red)),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.only(left:4.0),
+                    child: Expanded(child: Text('${actividad.description}')),
+                  ),
+                ),
+                
+                IconButton(onPressed: () {Navigator.pushNamed(context, 'agregar', arguments: actividad);} , icon: Icon(Icons.edit, color: Colors.green)),
+                IconButton(onPressed: () {actividadesProvider.borrarActividad(actividad.id.toString()); Navigator.pushNamed(context, 'inicio');  } , icon: Icon(Icons.delete,  color: Colors.red)),
               ],
             ),
           ],
         ),
       ),
     );
-    // return Dismissible(
-    //   key: UniqueKey(),
-    //   background: Container(
-    //     color: Colors.red,
-    //   ),
-    //   onDismissed: (direction) => actividadesProvider.borrarActividad(actividad.id.toString()),
-    //   child: ListTile(
-    //     title: Text('${actividad.title} - ${actividad.description}'),
-    //     subtitle: Text(actividad.id.toString()),
-    //     onTap: () => Navigator.pushNamed(context, 'agregar', arguments: actividad),
-    //   ),
-    // );
-  }
-  
-  agregarActividad(BuildContext context ) => Navigator.pushNamed(context, 'agregar');
-  
-  Future getData() async {
-    final url = Uri.parse('https://catfact.ninja/breeds?limit=1');
-    final response = await http.get(url, headers: {'Accept':'applicarion/json'});
-    if(response.statusCode==200){
-      final data = json.decode(response.body);
-      print(data);
-    }
   }
 
+  agregarActividad(BuildContext context ) => Navigator.pushNamed(context, 'agregar');
 }
