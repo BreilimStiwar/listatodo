@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:listtodo/src/models/actividad_model.dart';
 import 'package:listtodo/src/models/cat_model.dart';
+import 'package:listtodo/src/providers/actividadesProvider.dart';
 import 'package:listtodo/src/providers/gatosProvider.dart';
 
 class Cats extends StatefulWidget {
@@ -11,12 +13,25 @@ class Cats extends StatefulWidget {
 }
 
 class _CatsState extends State<Cats> {
+
+
+  final actividadProvider = new ActividadesProvider();
+  List datos = [];
+
+  ActividadModel actividadModel = new ActividadModel();
+
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       appBar: AppBar(title: Text('Comprobar')),
-      body: _listCats(),
+      body: Column(
+        children: [
+          Expanded(child: _listCats()),
+          _saved(),
+        ],
+      ),
+      
     );
   }
 
@@ -31,22 +46,30 @@ class _CatsState extends State<Cats> {
           final cats = snapshot.data;
           return ListView.builder(
             itemCount: cats!.length,
-            itemBuilder: (BuildContext context, index) => _mostrarCats(context,cats[index])
-          );
+            itemBuilder: (BuildContext context, index){
+              // actividadModel.title = 'Tarea $index';
+              // actividadModel.description = cats[index].fact;
+              // actividadModel.status=false;
+              //datos.addAll(cats);
+              return _mostrarCats(context,cats[index]);
+            });
         }else{
           return Center(child: CircularProgressIndicator());
         }
       },
     );
   }
+  //  actividadModel.title = 'Tarea $index';
+  //             actividadModel.description = cats[index].fact;
 
-  Widget _mostrarCats(contex, Data cat ){
+  Widget _mostrarCats(contex, Data cat){
+    datos.add(cat.fact);
     return Container(
       padding: EdgeInsets.all(20.0),
       child: Card(
         elevation:2.0,
         child: Column(
-          children: <Widget>[
+        children: <Widget>[
             Text('${cat.fact}', style: TextStyle(fontSize: 16,color: Colors.blue)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -58,6 +81,26 @@ class _CatsState extends State<Cats> {
         ),
       ),
     );
+  }
+
+  Widget _saved(){
+    return ElevatedButton.icon(
+      label: Text('Guardar'),
+      icon: Icon(Icons.save),
+      onPressed:  _submit, 
+    );
+  }
+
+  void _submit(){
+    
+    datos.map((e) {
+      actividadModel.title = 'Prueba';
+      actividadModel.description = e;
+      actividadModel.status=false;
+      actividadProvider.crearActividad(actividadModel);
+    }).toList();
+    //print(datos);
+    //actividadProvider.crearActividad(actividadModel);
   }
 
 }

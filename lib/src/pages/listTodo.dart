@@ -141,7 +141,7 @@ class ListToDo extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text('${actividad.description}'),
+                Expanded(child: Text('${actividad.description}')),
                 IconButton(onPressed: (){}, icon: Icon(Icons.edit, color: Colors.green)),
                 IconButton(onPressed: (){}, icon: Icon(Icons.delete,  color: Colors.red)),
               ],
