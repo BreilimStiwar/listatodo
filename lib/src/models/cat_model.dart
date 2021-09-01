@@ -1,34 +1,29 @@
-class Cat {
+class Cast{
 
-  String? currentpage;
-  List<Data>? data;
+  List<Data> cats = [];
 
-  Cat({this.currentpage,this.data});
-
-  factory Cat.fromJson(Map<String, dynamic> json){
+  Cast.fromJsonList( List<dynamic>? jsonList ){
     
-    var list = json['data'] as List;
-    List<Data> dataList = list.map((i) => Data.fromJson(i)).toList();
+    if(jsonList == null) return;
 
-    return Cat(
-      currentpage : json['current_page'],
-      data        : dataList
-    );
-  
+    jsonList.forEach((item) { 
+      final cat = Data.fromJsonMap(item);
+      cats.add(cat);
+    });
+
   }
 
 }
 
 class Data {
-
   String? fact;
   int? length;
 
-  Data({this.fact, this.length});
+  Data({this.fact,this.length});
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-    fact   : json['fact'],
-    length : json['length']
-  );
-  
+  Data.fromJsonMap(Map<String,dynamic> json){
+    fact   = json['fact'];
+    length = json['length'];
+  }
+
 }

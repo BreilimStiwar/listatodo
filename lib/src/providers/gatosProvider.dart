@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:listtodo/src/models/actividad_model.dart';
+import 'package:listtodo/src/models/cat_model.dart';
 
-class GatosProvider{
+class CatsProvider{
 
   final String _url = 'https://catfact.ninja/facts';
 
-  Future<bool> gatoActividad(String limit ) async {  
+  Future<List<Data>> gatoActividad(String limit ) async {  
 
     int getLimit = int.parse(limit);
 
@@ -17,11 +18,9 @@ class GatosProvider{
 
     final decodedData = json.decode(resp.body);
 
-    print(decodedData['data']);
+    final cast = new Cast.fromJsonList(decodedData['data']);
 
-    // print(limit);
-
-    return true;
+    return cast.cats;
 
   }
 

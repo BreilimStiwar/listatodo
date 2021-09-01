@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:listtodo/src/models/actividad_model.dart';
+import 'package:listtodo/src/pages/cats_page.dart';
 import 'package:listtodo/src/providers/actividadesProvider.dart';
 import 'package:listtodo/src/providers/gatosProvider.dart';
 
@@ -14,7 +15,7 @@ class ListToDo extends StatelessWidget {
   ListToDo({ Key? key }) : super(key: key); 
 
   final actividadesProvider = new ActividadesProvider();
-  final gatosProvider = new GatosProvider();
+  final gatosProvider = new CatsProvider();
   final numdata = TextEditingController();
 
   @override
@@ -98,7 +99,7 @@ class ListToDo extends StatelessWidget {
                 color: Colors.blue,
                 child: Text('Recibir', style: TextStyle(color: Colors.white),),
                 onPressed: () => {
-                  _obtenerData()
+                  _sendData(context)
                 },
               )
             ],
@@ -108,8 +109,8 @@ class ListToDo extends StatelessWidget {
     );
   }
 
-  _obtenerData(){
-    gatosProvider.gatoActividad(numdata.text.toString());
+  _sendData(context){
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Cats(limit: numdata.text.toString())));
   }
 
   Widget _crearListado(){
